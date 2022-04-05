@@ -21,7 +21,7 @@ class SplachScreen extends StatelessWidget {
         fontWeight: FontWeight.w900,
         color: mainTextColor,
       ),
-      backgroundColor: Color(0xFF232323),
+      backgroundColor: const Color(0xFF232323),
     );
   }
 }

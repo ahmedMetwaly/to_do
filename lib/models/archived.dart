@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:to_do/shared/constants.dart';
 import 'package:to_do/shared/cubit/AppCubit.dart';
 import 'package:to_do/shared/cubit/AppCubitStates.dart';
@@ -21,7 +22,9 @@ class ArchivedTasks extends StatelessWidget {
           doneSign: true,
           taskTitle: cubit.archivedList[index]['title'],
           taskTime: cubit.archivedList[index]['time'],
-          taskDate: cubit.archivedList[index]['date'],
+          taskDate: DateFormat.yMMMMEEEEd()
+              .format(DateTime.parse(cubit.archivedList[index]['date']))
+              .toString(),
         ),
         separatorBuilder: (context, index) => Container(
           height: 1,

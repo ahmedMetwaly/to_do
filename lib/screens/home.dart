@@ -4,7 +4,6 @@ import 'package:to_do/shared/constants.dart';
 import 'package:to_do/shared/cubit/AppCubit.dart';
 import 'package:to_do/shared/cubit/AppCubitStates.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_conditional_rendering/flutter_conditional_rendering.dart';
 
 class Home extends StatelessWidget {
   Home({Key? key}) : super(key: key);
@@ -13,7 +12,7 @@ class Home extends StatelessWidget {
   TextEditingController taskTitle = TextEditingController();
   TextEditingController taskDate = TextEditingController();
   TextEditingController taskTime = TextEditingController();
-
+  var date;
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -86,7 +85,7 @@ class Home extends StatelessWidget {
                   if (formKey.currentState!.validate()) {
                     cubit.insertToDataBase(
                       taskTitle: taskTitle.text,
-                      taskDate: taskDate.text,
+                      taskDate: date,
                       taskTime: taskTime.text,
                     );
                     cubit.closedBottomSheet();
@@ -96,26 +95,19 @@ class Home extends StatelessWidget {
                 }
               },
             ),
-            body: Conditional.single(
-              context: context,
-              conditionBuilder: (context) => true,
-              widgetBuilder: (context) => cubit.screens[cubit.selectedIndex],
-              fallbackBuilder: (context) => const Center(
-                child: Text(
-                  'You hav\'nt any task',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                    fontFamily: 'Lobster',
-                    wordSpacing: 5,
-                  ),
-                ),
-              ),
-            ),
+            body: cubit.screens[cubit.selectedIndex],
           );
         },
       ),
     );
+  }
+
+  String convertDateTimeDisplay(String date) {
+    final DateFormat displayFormater = DateFormat('yyyy-MM-dd HH:mm:ss.SSS');
+    final DateFormat serverFormater = DateFormat('yyyy-MM-dd');
+    final DateTime displayDate = displayFormater.parse(date);
+    final String formatted = serverFormater.format(displayDate);
+    return formatted;
   }
 
   Theme timePicker(BuildContext context) {
@@ -173,6 +165,8 @@ class Home extends StatelessWidget {
                   lastDate: DateTime(2030),
                 ).then(
                   (value) {
+                    date = convertDateTimeDisplay(value.toString());
+                    //print(date);
                     return taskDate.text =
                         DateFormat.yMMMMEEEEd().format(value!);
                   },
@@ -288,7 +282,7 @@ class Home extends StatelessWidget {
         ),
       ),
       centerTitle: true,
-      backgroundColor: Color(0xFF232323),
+      backgroundColor: const Color(0xFF232323),
     );
   }
 

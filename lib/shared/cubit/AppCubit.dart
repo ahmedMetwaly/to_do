@@ -1,5 +1,3 @@
-import 'package:bloc/bloc.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sqflite/sqflite.dart';
@@ -7,6 +5,7 @@ import 'package:to_do/models/archived.dart';
 import 'package:to_do/models/done.dart';
 import 'package:to_do/models/tasks.dart';
 import 'package:to_do/shared/cubit/AppCubitStates.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 late Database database;
 
@@ -55,26 +54,29 @@ class AppCubit extends Cubit<AppCubitStates> {
 
 //dataBase
   void createDataBase() {
+    tz.initializeTimeZones();
+    // print('time zone is initialized');
+
     openDatabase(
       'toDo.db',
       version: 1,
       onCreate: (database, version) {
-        print('database is created');
+        //  print('database is created');
         database
             .execute(
-                'CREATE TABLE tasks (id INTEGER PRIMARY KEY, title TEXT, date TEXT, time TEXT, state Text)')
+                'CREATE TABLE tasks (id INTEGER PRIMARY KEY, title TEXT, date TEXT, time TEXT, state Text, makeNotification TEXT)')
             .then(
           (value) {
-            print('Table is created');
+            //  print('Table is created');
           },
         ).catchError(
           (error) {
-            print('while creating Table this error happened ${error}');
+            //   print('while creating Table this error happened ${error}');
           },
         );
       },
       onOpen: (database) {
-        print('data base is opened');
+        //print('data base is opened');
         getData(database);
       },
     ).then((value) {
@@ -92,11 +94,11 @@ class AppCubit extends Cubit<AppCubitStates> {
     await database.transaction(
       (txn) => txn
           .rawInsert(
-        'INSERT INTO tasks(title, date, time, state) VALUES("$taskTitle", "$taskDate", "$taskTime", "taskList")',
+        'INSERT INTO tasks(title, date, time, state, makeNotification) VALUES("$taskTitle", "$taskDate", "$taskTime", "taskList", "true")',
       )
           .then(
         (value) {
-          print('$value is inserted sucssefully ');
+          //print('$value is inserted sucssefully ');
           emit(InsertedToDataBase());
           getData(database).then((value) {
             emit(DataIsgitten());
@@ -104,7 +106,7 @@ class AppCubit extends Cubit<AppCubitStates> {
         },
       ).catchError(
         (error) {
-          print('$error created when inserrting a row in');
+          //print('$error created when inserrting a row in');
         },
       ),
     );
@@ -115,7 +117,7 @@ class AppCubit extends Cubit<AppCubitStates> {
       taskList = [];
       doneList = [];
       archivedList = [];
-      print('dataBase is gitten');
+      // print('dataBase is gitten');
       for (var task in value) {
         if (task['state'] == 'taskList') {
           taskList.add(task);
@@ -125,18 +127,26 @@ class AppCubit extends Cubit<AppCubitStates> {
           archivedList.add(task);
         }
       }
-      print('taskList = $taskList');
-      print('doneList = $doneList');
-      print('archivedList = $archivedList');
+      //print('taskList = $taskList');
+      //print('doneList = $doneList');
+      //print('archivedList = $archivedList');
 
       emit(DataIsgitten());
     });
   }
 
+  getSpecificTask(int id) {
+    return database
+        .rawQuery('SELECT * FROM tasks WHERE id = ? ', [id]).then((value) {
+      emit(GetSpecificTask());
+      //print(value);
+    });
+  }
+
   void updateData({required String state, required int id}) {
-    database.rawUpdate('UPDATE tasks SET state = ? WHERE id = ?',
-        ['$state', id]).then((value) {
-      print('data is updated');
+    database.rawUpdate(
+        'UPDATE tasks SET state = ? WHERE id = ?', [state, id]).then((value) {
+      // print('data is updated');
       emit(UpdatedData());
       getData(database);
     });
@@ -144,7 +154,7 @@ class AppCubit extends Cubit<AppCubitStates> {
 
   void deleteData({required int id}) {
     database.rawDelete('DELETE FROM tasks WHERE id = ?', [id]).then((value) {
-      print('$value is deleted');
+      //print('$value is deleted');
       emit(Delted());
       getData(database);
     });

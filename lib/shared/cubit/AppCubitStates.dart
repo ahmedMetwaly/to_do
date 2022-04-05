@@ -19,3 +19,7 @@ class DataIsgitten extends AppCubitStates {}
 class UpdatedData extends AppCubitStates {}
 
 class Delted extends AppCubitStates {}
+
+class UpdaupdateNotificationListData extends AppCubitStates {}
+
+class GetSpecificTask extends AppCubitStates {}
