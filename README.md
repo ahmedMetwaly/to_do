@@ -1,16 +1,21 @@
-# to_do
+To Do App
 
-A new Flutter project.
+Hello everybody, 
+Now i finished To Do App with flutter, 
+you can add tasks do you want to do at specific date and time, When the time for the task comes, you will receive a notification with the name of the task title if you pressed on the notification the tasks list will open. 
+You can move it from tasks list to done list  or archived list and you can delete it by swipping the task right or left.
 
-## Getting Started
+used packages: 
+  sqflite: ^2.0.2
+  intl: ^0.17.0
+  flutter_conditional_rendering: ^2.0.0
+  splash_screen_view: ^3.0.0
+  bloc: ^8.0.3
+  flutter_bloc: ^8.0.1
+  flutter_local_notifications: ^9.4.0 
+  timezone: ^0.8.0: 
 
-This project is a starting point for a Flutter application.
+download:  https://www.mediafire.com/file/yhokkdbnfnm8hyf/app-release.apk/file
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+I really want your support to keep going❤ 
+ #flutter #fluttercommunity #flutterdeveloper #flutterdev #flutterappdevelopment #flutterjobs
